@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require('mongoose')
 const PORT = 5000
 const { MONGOURI } = require('./keys')
+const fileUpload = require('express-fileupload');
 
 mongoose.connect(MONGOURI,{
     useNewUrlParser:true,
@@ -13,6 +14,7 @@ require('./models/users')
 require('./models/products')
 
 app.use(express.json())
+app.use(fileUpload())
 app.use(require('./routes/users'))
 app.use(require('./routes/products'))
 

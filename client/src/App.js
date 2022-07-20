@@ -1,23 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+
+import Feed from "./components/Feed";
+import MasonryImageList from "./components/ImageList";
+import Navbar from "./components/Navbar";
+import Tab from "./components/Tab";
+import {useState } from "react";
+import FileUpload from "./components/FileUpload";
+
 
 function App() {
+  const [search, setSearch] = useState("");
   return (
+    
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navbar search={search} setSearch={setSearch}/>
+      <Feed search={search} setSearch={setSearch} />
+      <FileUpload />
+
     </div>
   );
 }

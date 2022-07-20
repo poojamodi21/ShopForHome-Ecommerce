@@ -1,0 +1,4 @@
+name,price,description,image,category,urlQuery,countInStock
+Bed,100,This is a bed,https://source.unsplash.com/random/400x200,Bed,bedUrl,10
+Sofa,100,This is a bed,https://source.unsplash.com/random/400x200,Sofa,Sofaurl,10
+Chair,100,This is a bed,https://source.unsplash.com/random/400x200,Chair,Chairurl,10
