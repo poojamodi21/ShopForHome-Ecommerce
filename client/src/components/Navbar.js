@@ -14,6 +14,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -96,8 +97,9 @@ export default function PrimarySearchAppBar({ search, setSearch }) {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            <Link style={{ textDecoration: 'none' }} to="/login" ><MenuItem onClick={handleMenuClose} >Login</MenuItem></Link>
+            <Link style={{ textDecoration: 'none' }} to="/register"><MenuItem onClick={handleMenuClose}>Register</MenuItem></Link>
+
         </Menu>
     );
 
@@ -154,14 +156,18 @@ export default function PrimarySearchAppBar({ search, setSearch }) {
                     >
 
                     </IconButton>
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        component="div"
-                        sx={{ display: { xs: 'none', sm: 'block' } }}
-                    >
-                        ECOMMERCE
-                    </Typography>
+                    <Link to="/" style={{ textDecoration: 'none' }}>
+                        <Typography
+                            variant="h6"
+                            noWrap
+                            component="div"
+
+                            sx={{ display: { xs: 'none', sm: 'block', color: 'white', fontWeight: 'bold' } }}
+                        >
+                            ShopForHome
+
+                        </Typography>
+                    </Link>
                     <Search>
                         <SearchIconWrapper>
                             <SearchIcon />
@@ -179,6 +185,7 @@ export default function PrimarySearchAppBar({ search, setSearch }) {
                                 <ShoppingCartIcon />
                             </Badge>
                         </IconButton>
+
                         <IconButton
                             size="large"
                             edge="end"
@@ -190,6 +197,7 @@ export default function PrimarySearchAppBar({ search, setSearch }) {
                         >
                             <AccountCircle />
                         </IconButton>
+
                     </Box>
                     <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
                         <IconButton

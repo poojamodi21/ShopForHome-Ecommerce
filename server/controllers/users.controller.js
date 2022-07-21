@@ -48,7 +48,11 @@ const login = async (req, res) => {
         return res.status(422).json({ error: "Invalid name or Password" })
     }
     const token = jwt.sign({ id: savedUser._id }, JWT_KEY)
-    res.json({ token: token })
+    const user = {
+        name: savedUser.name,
+        isAdmin: savedUser.isAdmin,
+    }
+    res.json({ token: token, user: user })
 }
 const allUsers = async (req, res) => {
     try {
@@ -84,10 +88,10 @@ const deleteUser = async (req, res) => {
 }
 const convertAdmin = async (req, res) => {
     const { id } = req.params
-    const { name} = req.body
+    const { name } = req.body
     try {
         if (!req.user.isAdmin) return res.status(401).json({ error: "You must be admin" })
-        const user = await User.findByIdAndUpdate(id, { name,isAdmin }, { new: true })
+        const user = await User.findByIdAndUpdate(id, { name, isAdmin }, { new: true })
         if (!user) return res.status(404).json({ error: "User not found" })
         res.json({ message: "User updated successfully" })
     }

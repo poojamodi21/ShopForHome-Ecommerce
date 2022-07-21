@@ -5,81 +5,25 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import CustomCard from './CustomCard';
 import { Typography } from '@mui/material';
-
-const Products = [
-  {
-    id: 1,
-    name: 'Product 1',
-    description: 'This is a product',
-    image: 'https://source.unsplash.com/random/400x200',
-    price: '$100',
-    category: 'bed',
+import { useEffect,useState, useContext} from 'react';
+import { GlobalContext } from '../App';
 
 
-  },
-  {
-    id: 2,
-    name: 'Product 2',
-    description: 'This is a product',
-    image: 'https://source.unsplash.com/random/400x200',
-    price: '$100',
-    category: 'furniture',
 
-  },
-  {
-    id: 3,
-    name: 'Product 3',
-    description: 'This is a product',
-    image: 'https://source.unsplash.com/random/400x200',
-    price: '$100',
-    category: 'furniture',
-
-  },
-  {
-    id: 4,
-    name: 'Product 4',
-    description: 'This is a product',
-    image: 'https://source.unsplash.com/random/400x200',
-    price: '$100',
-    category: 'bed',
-
-  },
-  {
-    id: 5,
-    name: 'Product 5',
-    description: 'This is a product',
-    image: 'https://source.unsplash.com/random/400x200',
-    price: '$100',
-    category: 'chairs',
-
-  },
-  {
-    id: 6,
-    name: 'Product 6',
-    description: 'This is a product',
-    image: 'https://source.unsplash.com/random/400x200',
-    price: '$100',
-    category: 'chairs',
-  },
-  {
-    id: 7,
-    name: 'Product 7',
-    description: 'This is a product',
-    image: 'https://source.unsplash.com/random/400x200',
-    price: '$100',
-    category: 'tables',
-  },
-  {
-    id: 8,
-    name: 'Product 8',
-    description: 'This is a product',
-    image: 'https://source.unsplash.com/random/400x200',
-    price: '$100',
-    category: 'tables',
-  },
-];
 
 export default function ResponsiveGrid({ search, setSearch }) {
+  const [products, setProducts] = useState([]);
+  const globalContext = useContext(GlobalContext);
+  useEffect(() => {
+    const getProducts = async () => {
+      const response = await fetch('/allProducts');
+      const data = await response.json();
+      setProducts(data);
+    }
+    getProducts();
+    
+  }, []);
+
   return (
     <Box sx={{
       flexGrow: 1
@@ -91,7 +35,7 @@ export default function ResponsiveGrid({ search, setSearch }) {
         Right to the latest trends
       </Typography>
       <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-        {Products.filter((item) => {
+        {products.filter((item) => {
           if (search == "") {
             return item
           } else if (item.name.toLowerCase().includes(search.toLowerCase())) {
