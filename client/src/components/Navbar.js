@@ -15,6 +15,17 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { GlobalContext } from '../App';
+import { ToastContainer, toast } from 'material-react-toastify';
+import 'material-react-toastify/dist/ReactToastify.css';
+import Dropdown from './Dropdown';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import { useEffect } from 'react';
+
+
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -31,7 +42,24 @@ const Search = styled('div')(({ theme }) => ({
         width: 'auto',
     },
 }));
+const Dropdownwrapper = styled('div')(({ theme }) => ({
+    position: 'relative',
 
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: alpha(theme.palette.common.white, 0.15),
+    '&:hover': {
+        backgroundColor: alpha(theme.palette.common.white, 0.25),
+    },
+    marginRight: theme.spacing(2),
+    marginLeft: 0,
+    margin: '10px 0',
+
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+        marginLeft: theme.spacing(3),
+        width: 'auto',
+    },
+}));
 const SearchIconWrapper = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 2),
     height: '100%',
@@ -56,7 +84,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }));
 
-export default function PrimarySearchAppBar({ search, setSearch }) {
+export default function PrimarySearchAppBar({ search, setSearch, category, setCategory, price, setPrice }) {
+    const globalContext = useContext(GlobalContext);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -80,7 +109,23 @@ export default function PrimarySearchAppBar({ search, setSearch }) {
         setMobileMoreAnchorEl(event.currentTarget);
     };
 
+    const logout = () => {
+        globalContext.setUser({});
+        localStorage.clear();
+        toast.success(`${globalContext.user.name} logged out successfully`, {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    }
+    
+
     const menuId = 'primary-search-account-menu';
+    
     const renderMenu = (
         <Menu
             anchorEl={anchorEl}
@@ -97,11 +142,28 @@ export default function PrimarySearchAppBar({ search, setSearch }) {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <Link style={{ textDecoration: 'none' }} to="/login" ><MenuItem onClick={handleMenuClose} >Login</MenuItem></Link>
-            <Link style={{ textDecoration: 'none' }} to="/register"><MenuItem onClick={handleMenuClose}>Register</MenuItem></Link>
+            {globalContext.user.name ? (
+                <div>
+                    {
+                        console.log(globalContext.user.cart.length)
+                    }
+                    <MenuItem onClick={handleMenuClose} >Welcome, {globalContext.user.name}</MenuItem>
+                    <Link style={{ textDecoration: 'none' }} to="/profile" ><MenuItem onClick={handleMenuClose} >Profile</MenuItem></Link>
+                    <Link onClick={logout} style={{ textDecoration: 'none' }} to="/"><MenuItem onClick={handleMenuClose}>Logout</MenuItem></Link>
+                </div>
+            ) :
+                (
+                    <div>
+                        
+                        <Link style={{ textDecoration: 'none' }} to="/login" ><MenuItem onClick={handleMenuClose} >Login</MenuItem></Link>
+                        <Link style={{ textDecoration: 'none' }} to="/register"><MenuItem onClick={handleMenuClose}>Register</MenuItem></Link>
+                    </div>
+
+                )}
 
         </Menu>
     );
+
 
     const mobileMenuId = 'primary-search-account-menu-mobile';
     const renderMobileMenu = (
@@ -120,10 +182,14 @@ export default function PrimarySearchAppBar({ search, setSearch }) {
             open={isMobileMenuOpen}
             onClose={handleMobileMenuClose}
         >
+
             <MenuItem>
                 <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                    <Badge badgeContent={4} color="error">
-                        <ShoppingCartIcon />
+                    <Badge
+                        badgeContent={4} color="error">
+                        <Link to="/cart" >
+                            <ShoppingCartIcon />
+                        </Link>
                     </Badge>
                 </IconButton>
                 <p>Cart</p>
@@ -142,6 +208,27 @@ export default function PrimarySearchAppBar({ search, setSearch }) {
             </MenuItem>
         </Menu>
     );
+    const [products, setProducts] = useState([]);
+
+
+    useEffect(() => {
+        const getProducts = async () => {
+            const response = await fetch('/allProducts');
+            const data = await response.json();
+            setProducts(data);
+        }
+        getProducts();
+
+    }, []);
+    
+
+    const uniqueCategories = products.map(product => product.category).filter((item, index, array) => array.indexOf(item) === index);
+    const handleChange = (event) => {
+        setCategory(event.target.value);
+    };
+
+
+    
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -178,11 +265,74 @@ export default function PrimarySearchAppBar({ search, setSearch }) {
                             inputProps={{ 'aria-label': 'search' }}
                         />
                     </Search>
+
+
+
+                    <Dropdownwrapper>
+                        <FormControl sx={{ m: 1, minWidth: 140, margin: '-10 20px', }} size="small">
+                            <InputLabel id="demo-select-small" style={{ color: 'whitesmoke', border: 'none' }}>Category</InputLabel>
+                            <Select
+                                style={{ color: 'whitesmoke', border: 'none' }}
+                                labelId="demo-select-small"
+                                id="demo-select-small"
+                                value={category}
+                                label="Age"
+                                onChange={handleChange}
+                            >
+
+
+                                <MenuItem value="">
+                                    <em>All</em>
+                                </MenuItem>
+                                {uniqueCategories.map((category, index) => (
+                                    <MenuItem value={category} key={index}>
+                                        {category}
+                                    </MenuItem>
+                                ))}
+
+
+
+                            </Select>
+                        </FormControl>
+                    </Dropdownwrapper>
+                    <Dropdownwrapper>
+
+                        <FormControl sx={{ m: 1, minWidth: 140, margin: '-10 20px', }} size="small">
+                            <InputLabel id="demo-select-small" style={{ color: 'whitesmoke', border: 'none' }}>Sort By Price</InputLabel>
+                            <Select
+                                style={{ color: 'whitesmoke', border: 'none' }}
+                                labelId="demo-select-small"
+                                id="demo-select-small"
+                                value={price}
+                                label="Price"
+
+                                onChange={(e) => setPrice(e.target.value)}
+                            >
+
+                                <MenuItem value="">
+                                    <em>All</em>
+                                </MenuItem>
+                                <MenuItem value="lowest">Low to high</MenuItem>
+                                <MenuItem value="highest">High to low</MenuItem>
+
+
+
+                            </Select>
+                        </FormControl>
+                    </Dropdownwrapper>
+
+
+
+
+
+
                     <Box sx={{ flexGrow: 1 }} />
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                             <Badge badgeContent={4} color="error">
-                                <ShoppingCartIcon />
+                                <Link to="/cart" style={{ color: 'white' }}>
+                                    <ShoppingCartIcon />
+                                </Link>
                             </Badge>
                         </IconButton>
 
@@ -215,6 +365,17 @@ export default function PrimarySearchAppBar({ search, setSearch }) {
             </AppBar>
             {renderMobileMenu}
             {renderMenu}
+            <ToastContainer
+                position="top-center"
+                autoClose={3000}
+                hideProgressBar
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </Box>
     );
 }

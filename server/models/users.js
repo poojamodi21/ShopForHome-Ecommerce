@@ -14,10 +14,16 @@ const userSchema = new mongoose.Schema({
         default:false,
         required:true
     },
-    cart:{
-        type:Array,
-        default:[]
-    }
+    cart:[{
+        productId:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'Product',
+            
+        },
+        quantity:{
+            type:Number,
+        }
+    }]
 })
 
 mongoose.model("Users",userSchema)

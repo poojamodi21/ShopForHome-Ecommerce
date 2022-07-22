@@ -3,6 +3,7 @@ const User = mongoose.model("Users")
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const { JWT_KEY } = require('../keys')
+const Product = mongoose.model("Product")
 
 const register = (req, res) => {
     const { name, password } = req.body
@@ -51,6 +52,7 @@ const login = async (req, res) => {
     const user = {
         name: savedUser.name,
         isAdmin: savedUser.isAdmin,
+        cart: savedUser.cart
     }
     res.json({ token: token, user: user })
 }
@@ -111,6 +113,49 @@ const updateUser = async (req, res) => {
         console.log(error)
     }
 }
+const addToCart = async (req, res) => {
+    const { id } = req.params
+    const user = req.user.name
+    console.log(user, id)
+    
+    try {
+        const userData = await User.find({ name: user })
+        if (!userData) return res.status(404).json({ error: "User not found" })
+        const product = await Product.findById(id)
+        if (!product) return res.status(404).json({ error: "Product not found" })
+        const result = await User.findOneAndUpdate({name:user }, {
+            $push: { cart: { productId: id, quantity: 1 } }
+        }, {
+            new: true
+        })
+        if (!result) return res.status(404).json({ error: "Something went wrong" })
+        res.json({ message: "Product added to cart successfully" })
+    }
+    catch (error) {
+        console.log(error)
+
+    }
+
+
+
+}
+const getUser= async (req, res) => {
+    const user = req.user.name
+    try {
+        const userData = await User.findOne({ name: user })
+        if (!userData) return res.status(404).json({ error: "User not found" })
+        const loggedInUser = {
+            name: userData.name,
+            isAdmin: userData.isAdmin,
+            cart: userData.cart
+        }
+        res.json(loggedInUser)
+    }
+    catch (error) {
+        console.log(error)
+    }
+}
+
 
 
 
@@ -122,5 +167,7 @@ module.exports = {
     allUsers,
     deleteUser,
     convertAdmin,
-    updateUser
+    updateUser,
+    addToCart,
+    getUser,
 }

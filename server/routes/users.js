@@ -6,7 +6,9 @@ const {
     allUsers,
     deleteUser,
     updateUser,
-    convertAdmin
+    convertAdmin,
+    addToCart,
+    getUser,
 } = require('../controllers/users.controller')
 const  isLoggedIn = require('../middlewares/isLoggedIn')
 
@@ -17,6 +19,8 @@ router.get('/allUsers',isLoggedIn,allUsers)
 router.delete('/deleteUser/:id',isLoggedIn,deleteUser)
 router.put('/updateUser/:id',isLoggedIn, updateUser)
 router.put('/convertAdmin/:id',isLoggedIn, convertAdmin)
+router.put('/addToCart/:id',isLoggedIn, addToCart)
+router.get('/getUser',isLoggedIn,getUser)
 
 
 
