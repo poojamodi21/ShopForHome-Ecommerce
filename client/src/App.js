@@ -1,4 +1,4 @@
-import { createContext, useEffect } from "react";
+import { createContext, useEffect,useState } from "react";
 import {
   BrowserRouter,
   Route,
@@ -7,7 +7,7 @@ import {
 import Feed from "./components/Feed";
 import Navbar from "./components/Navbar";
 
-import { useState } from "react";
+
 import FileUpload from "./components/FileUpload";
 import Login from "./components/Login";
 import Register from "./components/Register";

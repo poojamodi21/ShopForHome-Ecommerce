@@ -125,7 +125,6 @@ export default function PrimarySearchAppBar({ search, setSearch, category, setCa
     
 
     const menuId = 'primary-search-account-menu';
-    
     const renderMenu = (
         <Menu
             anchorEl={anchorEl}
@@ -144,9 +143,7 @@ export default function PrimarySearchAppBar({ search, setSearch, category, setCa
         >
             {globalContext.user.name ? (
                 <div>
-                    {
-                        console.log(globalContext.user.cart.length)
-                    }
+                    
                     <MenuItem onClick={handleMenuClose} >Welcome, {globalContext.user.name}</MenuItem>
                     <Link style={{ textDecoration: 'none' }} to="/profile" ><MenuItem onClick={handleMenuClose} >Profile</MenuItem></Link>
                     <Link onClick={logout} style={{ textDecoration: 'none' }} to="/"><MenuItem onClick={handleMenuClose}>Logout</MenuItem></Link>
@@ -186,7 +183,7 @@ export default function PrimarySearchAppBar({ search, setSearch, category, setCa
             <MenuItem>
                 <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                     <Badge
-                        badgeContent={4} color="error">
+                        badgeContent={2} color="error">
                         <Link to="/cart" >
                             <ShoppingCartIcon />
                         </Link>
@@ -328,14 +325,17 @@ export default function PrimarySearchAppBar({ search, setSearch, category, setCa
 
                     <Box sx={{ flexGrow: 1 }} />
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                        {
+                            console.log(globalContext.user.cart)
+                        }
                         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                            <Badge badgeContent={4} color="error">
+                            <Badge badgeContent={1} color="error">
                                 <Link to="/cart" style={{ color: 'white' }}>
                                     <ShoppingCartIcon />
                                 </Link>
                             </Badge>
                         </IconButton>
-
+                            
                         <IconButton
                             size="large"
                             edge="end"

@@ -23,6 +23,13 @@ const userSchema = new mongoose.Schema({
         quantity:{
             type:Number,
         }
+    }],
+    wishlist:[{
+        productId:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'Product',
+        },
+        
     }]
 })
 

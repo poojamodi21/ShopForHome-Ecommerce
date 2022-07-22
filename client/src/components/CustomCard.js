@@ -43,16 +43,60 @@ export default function CustomCard({ name, description, image, price, productId 
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-        });
+          });
         }
 
         console.log(data);
       }
       ).catch(err => console.log(err));
 
+  }
+
+  const addToWishlist = () => {
+    console.log("add to wishlist");
+    fetch(`/addToWishlist/${productId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+      },
+    }).then(res => res.json())
+      .then(data => {
+        if (data.error) {
+          toast.error(data.error, {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+        }
+        else {
+          toast.success(data.message, {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+        }
+
+        
+        console.log(data);
+      }
+      ).catch(err => console.log(err));
 
   }
-  return (
+
+
+  
+  
+  
+    return (
     <div>
       <ToastContainer
         position="top-center"
@@ -92,11 +136,14 @@ export default function CustomCard({ name, description, image, price, productId 
         <CardActions>
 
           <Stack direction="row" spacing={2}>
-            <Button variant="outlined" startIcon={<FavoriteIcon />}>
+            <Button 
+            onClick={() => addToWishlist()}
+            variant="outlined"
+             startIcon={<FavoriteIcon />}>
               Wishlist
             </Button>
             <Button
-              onClick={()=>addToCart()}
+              onClick={() => addToCart()}
               variant="contained"
               endIcon={< AddCircleOutlineOutlinedIcon />}>
               Add to Cart

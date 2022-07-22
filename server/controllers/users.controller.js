@@ -136,9 +136,33 @@ const addToCart = async (req, res) => {
 
     }
 
-
-
 }
+
+const addToWishlist = async (req, res) => {
+    const { id } = req.params
+    const user = req.user.name
+    console.log(user, id)
+    try {
+        const userData = await User.find({ name: user })
+        if (!userData) return res.status(404).json({ error: "User not found" })
+        const product = await Product.findById(id)
+        if (!product) return res.status(404).json({ error: "Product not found" })
+        const result = await User.findOneAndUpdate({name:user }, {
+            $push: { wishlist: { productId: id, quantity: 1 } }
+        }, {
+            new: true
+        })
+        if (!result) return res.status(404).json({ error: "Something went wrong" })
+        res.json({ message: "Product added to wishlist successfully" })
+    }
+    catch (error) {
+        console.log(error)
+
+    }
+}
+
+
+
 const getUser= async (req, res) => {
     const user = req.user.name
     try {
@@ -170,4 +194,5 @@ module.exports = {
     updateUser,
     addToCart,
     getUser,
+    addToWishlist,
 }

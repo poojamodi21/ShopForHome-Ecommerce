@@ -89,7 +89,7 @@ export default function Register() {
                     else {
                         
                         
-                        toast.success('User logged in succesfully!', {
+                        toast.success('User registered succesfully!', {
                             position: "top-center",
                             autoClose: 3000,
                             hideProgressBar: true,
