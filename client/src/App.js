@@ -12,6 +12,7 @@ import FileUpload from "./components/FileUpload";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Cart from "./components/Cart";
+import Dashboard from "./components/DashboardContent";
 
 export const GlobalContext = createContext();
 
@@ -26,6 +27,7 @@ function App() {
     isAdmin: false,
     cart : [],
     wishlist : [],
+  
   });
 
   const getUser = async () => {
@@ -91,6 +93,7 @@ function App() {
             <Route path="/login" element={< Login />} />
             <Route path="/register" element={< Register />} />
             <Route path="/cart" element={< Cart />} />
+            <Route path="/dashboard" element={< Dashboard />} />
 
           </Routes>
 

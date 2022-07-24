@@ -110,7 +110,12 @@ export default function PrimarySearchAppBar({ search, setSearch, category, setCa
     };
 
     const logout = () => {
-        globalContext.setUser({});
+        globalContext.setUser({
+            name: "",
+            isAdmin: false,
+            cart: [],
+            wishlist: [],
+        });
         localStorage.clear();
         toast.success(`${globalContext.user.name} logged out successfully`, {
             position: "top-center",
@@ -122,7 +127,7 @@ export default function PrimarySearchAppBar({ search, setSearch, category, setCa
             progress: undefined,
         });
     }
-    
+
 
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
@@ -141,17 +146,18 @@ export default function PrimarySearchAppBar({ search, setSearch, category, setCa
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            {globalContext.user.name !="" ? (
+            {globalContext.user.name != "" ? (
                 <div>
-                    
+
                     <MenuItem onClick={handleMenuClose} >Welcome, {globalContext.user.name}</MenuItem>
                     <Link style={{ textDecoration: 'none' }} to="/profile" ><MenuItem onClick={handleMenuClose} >Profile</MenuItem></Link>
+                    {globalContext.user.isAdmin && <Link style={{ textDecoration: 'none' }} to="/dashboard"><MenuItem onClick={handleMenuClose}>Dashboard</MenuItem></Link>}
                     <Link onClick={logout} style={{ textDecoration: 'none' }} to="/"><MenuItem onClick={handleMenuClose}>Logout</MenuItem></Link>
                 </div>
             ) :
                 (
                     <div>
-                        
+
                         <Link style={{ textDecoration: 'none' }} to="/login" ><MenuItem onClick={handleMenuClose} >Login</MenuItem></Link>
                         <Link style={{ textDecoration: 'none' }} to="/register"><MenuItem onClick={handleMenuClose}>Register</MenuItem></Link>
                     </div>
@@ -217,7 +223,7 @@ export default function PrimarySearchAppBar({ search, setSearch, category, setCa
         getProducts();
 
     }, []);
-    
+
 
     const uniqueCategories = products.map(product => product.category).filter((item, index, array) => array.indexOf(item) === index);
     const handleChange = (event) => {
@@ -225,7 +231,7 @@ export default function PrimarySearchAppBar({ search, setSearch, category, setCa
     };
 
 
-    
+
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -246,7 +252,7 @@ export default function PrimarySearchAppBar({ search, setSearch, category, setCa
                             noWrap
                             component="div"
 
-                            sx={{ display: { xs: 'none', sm: 'block', color: 'white', fontWeight: 'bold' } }}
+                            sx={{ display: { xs: 'none', sm: 'block', color: 'white', fontWeight: 'bold', marginRight: '24px' } }}
                         >
                             ShopForHome
 
@@ -335,7 +341,7 @@ export default function PrimarySearchAppBar({ search, setSearch, category, setCa
                                 </Link>
                             </Badge>
                         </IconButton>
-                            
+
                         <IconButton
                             size="large"
                             edge="end"

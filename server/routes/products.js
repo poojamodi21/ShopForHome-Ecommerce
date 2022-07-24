@@ -6,6 +6,7 @@ const {
     updateProduct,
     deleteProduct,
     uploadProducts,
+  
 } = require('../controllers/products.controller')
 const  isLoggedIn = require('../middlewares/isLoggedIn')
 

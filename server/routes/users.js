@@ -10,6 +10,7 @@ const {
     addToCart,
     getUser,
     addToWishlist,
+    removeProduct,
 } = require('../controllers/users.controller')
 const  isLoggedIn = require('../middlewares/isLoggedIn')
 
@@ -23,6 +24,7 @@ router.put('/convertAdmin/:id',isLoggedIn, convertAdmin)
 router.put('/addToCart/:id',isLoggedIn, addToCart)
 router.get('/getUser',isLoggedIn,getUser)
 router.put('/addToWishlist/:id',isLoggedIn, addToWishlist)
+router.put('/removeProduct/:id',isLoggedIn, removeProduct)
 
 
 

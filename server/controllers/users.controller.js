@@ -79,7 +79,17 @@ const deleteUser = async (req, res) => {
                 return res.status(422).json({ error: error })
             }
             else {
-                res.json({ message: "User deleted successfully" })
+                User.find({})
+                    .then(
+                        (users) => {
+                            res.json({ message: "User deleted successfully", users })
+                        }
+                    ).catch
+                    (error => {
+                        console.log(error)
+                    }
+                    )
+
             }
         }
         )
@@ -101,13 +111,23 @@ const convertAdmin = async (req, res) => {
         console.log(error)
     }
 }
+
 const updateUser = async (req, res) => {
     const { id } = req.params
-    const { name, password } = req.body
+    const { name, isAdmin } = req.body
     try {
-        const user = await User.findByIdAndUpdate(id, { name, password }, { new: true })
-        if (!user) return res.status(404).json({ error: "User not found" })
-        res.json({ message: "User updated successfully" })
+        const user = await User.findByIdAndUpdate(id, { name, isAdmin }, { new: true })
+        User.find({})
+            .then(
+                (users) => {
+                    res.json({ message: "User updated successfully", users })
+                }
+            ).catch
+            (error => {
+                console.log(error)
+            }
+            )
+
     }
     catch (error) {
         console.log(error)
@@ -209,6 +229,35 @@ const getUser = async (req, res) => {
     }
 }
 
+const removeProduct = async (req, res) => {
+    const { id } = req.params
+    const user = req.user.name
+    try {
+        const userData = await User.findOne({ name: user })
+        if (!userData) return res.status(404).json({ error: "User not found" })
+        const result = await User.findByIdAndUpdate(userData._id,
+            {
+                $pull:
+                    { cart: { productId: id } }
+            }, { new: true })
+            .populate('cart.productId')
+            .exec((error, result) => {
+                if (error) {
+                    return res.status(422).json({ error: error })
+                }
+                else {
+                    res.json({ message: "Product removed from cart successfully", result })
+                }
+            }
+            )
+        //     if (!result) return res.status(404).json({ error: "Product not found" })
+        //     res.json({ message: "Product removed from cart successfully", result })
+    }
+    catch (error) {
+        console.log(error)
+    }
+}
+
 
 
 
@@ -224,4 +273,5 @@ module.exports = {
     addToCart,
     getUser,
     addToWishlist,
+    removeProduct,
 }
