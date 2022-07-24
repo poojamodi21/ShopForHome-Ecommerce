@@ -141,7 +141,7 @@ export default function PrimarySearchAppBar({ search, setSearch, category, setCa
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            {globalContext.user.name ? (
+            {globalContext.user.name !="" ? (
                 <div>
                     
                     <MenuItem onClick={handleMenuClose} >Welcome, {globalContext.user.name}</MenuItem>
@@ -183,7 +183,7 @@ export default function PrimarySearchAppBar({ search, setSearch, category, setCa
             <MenuItem>
                 <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                     <Badge
-                        badgeContent={2} color="error">
+                        badgeContent={globalContext.user.cart.length} color="error">
                         <Link to="/cart" >
                             <ShoppingCartIcon />
                         </Link>
@@ -329,7 +329,7 @@ export default function PrimarySearchAppBar({ search, setSearch, category, setCa
                             console.log(globalContext.user.cart)
                         }
                         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                            <Badge badgeContent={1} color="error">
+                            <Badge badgeContent={globalContext.user.cart.length} color="error">
                                 <Link to="/cart" style={{ color: 'white' }}>
                                     <ShoppingCartIcon />
                                 </Link>

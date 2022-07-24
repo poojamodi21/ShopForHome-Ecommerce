@@ -10,9 +10,12 @@ import Rating from '@mui/material/Rating';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import { ToastContainer, toast } from 'material-react-toastify';
 import 'material-react-toastify/dist/ReactToastify.css';
-
+import { useContext } from 'react';
+import { GlobalContext } from '../App';
 
 export default function CustomCard({ name, description, image, price, productId }) {
+    const globalContext = useContext(GlobalContext);
+
   const addToCart = () => {
     console.log("add to cart");
     fetch(`/addToCart/${productId}`, {
@@ -35,6 +38,7 @@ export default function CustomCard({ name, description, image, price, productId 
           });
         }
         else {
+          globalContext.setUser(data.result);
           toast.success(data.message, {
             position: "top-center",
             autoClose: 3000,

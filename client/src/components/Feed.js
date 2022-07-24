@@ -21,7 +21,7 @@ export default function ResponsiveGrid({ search, setSearch, category, setCategor
       setProducts(data);
     }
     getProducts();
-    
+
   }, []);
 
   return (
@@ -64,7 +64,7 @@ export default function ResponsiveGrid({ search, setSearch, category, setCategor
               .map((product, index) => {
                 return (
                   <Grid item xs={1} sm={4} md={3} key={index}>
-                    <CustomCard name={product.name} description={product.description} image={product.image} price={product.price} />
+                    <CustomCard name={product.name} description={product.description} image={product.image} price={product.price} productId={product._id} />
                   </Grid>
                 )
               })
@@ -94,7 +94,7 @@ export default function ResponsiveGrid({ search, setSearch, category, setCategor
               .map((product, index) => (
                 <Grid item xs={1} sm={4} md={3} key={index}>
 
-                  <CustomCard name={product.name} description={product.description} image={product.image} price={product.price} productId={product._id}/>
+                  <CustomCard name={product.name} description={product.description} image={product.image} price={product.price} productId={product._id} />
                 </Grid>
               ))
         }

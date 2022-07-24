@@ -21,7 +21,12 @@ function App() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState({
+    name:"",
+    isAdmin: false,
+    cart : [],
+    wishlist : [],
+  });
 
   const getUser = async () => {
     const response = await fetch('/getUser', {
@@ -33,7 +38,8 @@ function App() {
       }
     });
     const data = await response.json();
-    setUser(data);
+    setUser(data.result);
+    console.log(data);
   }
   useEffect(() => {
 

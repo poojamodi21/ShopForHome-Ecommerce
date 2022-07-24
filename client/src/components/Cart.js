@@ -67,13 +67,13 @@ export default function Cart() {
                                 <Grid item xs container direction="column" spacing={2}>
                                     <Grid item xs>
                                         <Typography gutterBottom variant="subtitle1" component="div" sx={{ fontWeight: 'bold' }}>
-                                            Standard license
+                                            {item.productId.name}
                                         </Typography>
                                         <Typography variant="body2" gutterBottom>
-                                            Full resolution 1920x1080 • JPEG
+                                            {item.productId.description}
                                         </Typography>
                                         <Typography variant="body2" color="text.secondary">
-                                            Category
+                                            {item.productId.category}
                                         </Typography>
                                     </Grid>
                                     <Grid item >
@@ -85,7 +85,7 @@ export default function Cart() {
 
                                 <Grid item >
                                     <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', marginRight: '30px', marginBottom: '15px' }}>
-                                        $19.00
+                                        ₹ {item.productId.price}
                                     </Typography>
                                     <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1, marginLeft: '-30px', justifyContent: 'space-between' }}>
 
