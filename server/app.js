@@ -12,11 +12,13 @@ mongoose.connect(MONGOURI,{
 
 require('./models/users')
 require('./models/products')
+require('./models/orders')
 
 app.use(express.json())
 app.use(fileUpload())
 app.use(require('./routes/users'))
 app.use(require('./routes/products'))
+app.use(require('./routes/orders.route'))
 
 mongoose.connection.on('connected',()=>{
     console.log("successfully connected to the database")

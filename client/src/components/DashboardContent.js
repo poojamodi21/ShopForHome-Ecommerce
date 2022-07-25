@@ -17,23 +17,16 @@ import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { mainListItems, secondaryListItems } from './listItems';
+import { MainListItems, mainListItems, SecondaryListItems, secondaryListItems } from './listItems';
 import Chart from './Chart';
 import Deposits from './Deposits';
 import Customers from './Customers';
+import { useState } from 'react';
+import Products from './Products';
+import FileUpload from './FileUpload';
+import Orders from './Orders';
 
-// function Copyright(props) {
-//   return (
-//     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-//       {'Copyright © '}
-//       <Link color="inherit" href="https://mui.com/">
-//         Your Website
-//       </Link>{' '}
-//       {new Date().getFullYear()}
-//       {'.'}
-//     </Typography>
-//   );
-// }
+
 
 const drawerWidth = 240;
 
@@ -85,6 +78,7 @@ const mdTheme = createTheme();
 
 function DashboardContent() {
   const [open, setOpen] = React.useState(true);
+  const [activeComponent, setActiveComponent] = useState('PRODUCTS');
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -142,9 +136,15 @@ function DashboardContent() {
           </Toolbar>
           <Divider />
           <List component="nav">
-            {mainListItems}
+            <MainListItems
+              activeComponent={activeComponent}
+              setActiveComponent={setActiveComponent}
+            />
             <Divider sx={{ my: 1 }} />
-            {secondaryListItems}
+            <SecondaryListItems
+              activeComponent={activeComponent}
+              setActiveComponent={setActiveComponent}
+            />
           </List>
         </Drawer>
         <Box
@@ -191,7 +191,10 @@ function DashboardContent() {
               {/* Recent Customers */}
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <Customers />
+                  {activeComponent === 'PRODUCTS' && <Products />}
+                  {activeComponent === 'CUSTOMERS' && <Customers />}
+                  {activeComponent ==='FILEUPLOAD' && <FileUpload/>}
+                  {activeComponent ==='ORDERS' && <Orders/>}
                 </Paper>
               </Grid>
             </Grid>

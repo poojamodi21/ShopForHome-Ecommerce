@@ -13,6 +13,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Cart from "./components/Cart";
 import Dashboard from "./components/DashboardContent";
+import Wishlist from "./components/Wishlist";
 
 export const GlobalContext = createContext();
 
@@ -93,6 +94,7 @@ function App() {
             <Route path="/login" element={< Login />} />
             <Route path="/register" element={< Register />} />
             <Route path="/cart" element={< Cart />} />
+            <Route path="/wishlist" element={< Wishlist />} />
             <Route path="/dashboard" element={< Dashboard />} />
 
           </Routes>

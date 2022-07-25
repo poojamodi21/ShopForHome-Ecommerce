@@ -41,20 +41,20 @@ export default function FileUpload() {
     //         password: data.get('password'),
     //     });
     // };
-    const onSubmit = async e =>{
+    const onSubmit = async e => {
         e.preventDefault();
         const formData = new FormData();
-        formData.append('file',file);
+        formData.append('file', file);
 
-        try{
-            const res = await axios.post('/uploadProducts',formData,{
-                headers:{
-                    "Authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZDU1ZmYzOTcwYTIyYWVmMzRhZDkxYiIsImlhdCI6MTY1ODI5OTM0N30.9lPdmiY_MjOyGdbHBHGidhZ2dlrJCGuOA86ftRmM4UA",
-                    'Content-Type':'multipart/form-data'
+        try {
+            const res = await axios.post('/uploadProducts', formData, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem("jwt")}`,
+                    'Content-Type': 'multipart/form-data'
                 }
             });
             const { message } = res.data
-        }catch(err){
+        } catch (err) {
             console.log("something went wrong")
         }
     }
@@ -78,7 +78,7 @@ export default function FileUpload() {
                     </Typography>
                     <Box component="form" noValidate onSubmit={onSubmit} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
-                            
+
                             <Grid item xs={12}>
                                 <TextField
                                     type="file"
@@ -86,10 +86,10 @@ export default function FileUpload() {
                                     onChange={(e) => setFile(e.target.files[0])}
                                     required
                                     fullWidth
-                                    
+
                                 />
                             </Grid>
-                            
+
                         </Grid>
                         <Button
                             type="submit"
@@ -99,7 +99,7 @@ export default function FileUpload() {
                         >
                             Upload
                         </Button>
-                        
+
                     </Box>
                 </Box>
                 {/* <Copyright sx={{ mt: 5 }} /> */}

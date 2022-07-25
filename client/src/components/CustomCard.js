@@ -12,9 +12,57 @@ import { ToastContainer, toast } from 'material-react-toastify';
 import 'material-react-toastify/dist/ReactToastify.css';
 import { useContext } from 'react';
 import { GlobalContext } from '../App';
+import { useEffect, useState } from 'react';
+import DoDisturbOnIcon from '@mui/icons-material/DoDisturbOn';
 
 export default function CustomCard({ name, description, image, price, productId }) {
-    const globalContext = useContext(GlobalContext);
+  const globalContext = useContext(GlobalContext);
+  const [remove, setRemove] = useState(false);
+  useEffect(() => {
+    console.log(window.location.pathname);
+    if (window.location.pathname === '/wishlist') {
+      setRemove(true);
+    }
+  }
+    , [])
+
+  const removeFromWishlist = (productId) => {
+    fetch(`/removeFromWishlist/${productId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+      }
+    }).then(res => res.json())
+      .then(data => {
+        if (data.error) {
+          toast.error(data.error, {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+        }
+        else {
+          globalContext.setUser(data.result);
+          toast.success(data.message, {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+        }
+      }
+      )
+  }
+
+
 
   const addToCart = () => {
     console.log("add to cart");
@@ -78,6 +126,7 @@ export default function CustomCard({ name, description, image, price, productId 
           });
         }
         else {
+          globalContext.setUser(data.result);
           toast.success(data.message, {
             position: "top-center",
             autoClose: 3000,
@@ -89,7 +138,7 @@ export default function CustomCard({ name, description, image, price, productId 
           });
         }
 
-        
+
         console.log(data);
       }
       ).catch(err => console.log(err));
@@ -97,10 +146,10 @@ export default function CustomCard({ name, description, image, price, productId 
   }
 
 
-  
-  
-  
-    return (
+
+
+
+  return (
     <div>
       <ToastContainer
         position="top-center"
@@ -140,12 +189,22 @@ export default function CustomCard({ name, description, image, price, productId 
         <CardActions>
 
           <Stack direction="row" spacing={2}>
-            <Button 
-            onClick={() => addToWishlist()}
-            variant="outlined"
-             startIcon={<FavoriteIcon />}>
-              Wishlist
-            </Button>
+            {
+              remove ?
+                (<Button
+                  onClick={() => removeFromWishlist(productId)}
+                  variant="outlined"
+                  startIcon={<DoDisturbOnIcon />}>
+                  Remove 
+                </Button>) : (
+                  <Button
+                    onClick={() => addToWishlist()}
+                    variant="outlined"
+                    startIcon={<FavoriteIcon />}>
+                    Wishlist
+                  </Button>
+                )
+            }
             <Button
               onClick={() => addToCart()}
               variant="contained"

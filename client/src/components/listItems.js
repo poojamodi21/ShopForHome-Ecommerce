@@ -9,43 +9,65 @@ import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 
-export const mainListItems = (
+
+export const MainListItems =({setActiveComponent})=> (
     <React.Fragment>
-        <ListItemButton>
+        <ListItemButton
+            onClick={() => {
+                setActiveComponent("DASHBOARD");
+            }}
+        >
             <ListItemIcon>
                 <DashboardIcon />
             </ListItemIcon>
             <ListItemText primary="Dashboard" />
         </ListItemButton>
-        <ListItemButton>
+        <ListItemButton
+            onClick={() => {
+                setActiveComponent("PRODUCTS");
+            }}
+        >
             <ListItemIcon>
                 <ShoppingCartIcon />
             </ListItemIcon>
-            <ListItemText primary="Orders" />
+            <ListItemText primary="Products" />
         </ListItemButton>
-        <ListItemButton>
+        <ListItemButton
+            onClick={() => {
+                setActiveComponent("CUSTOMERS");
+            }}
+        >
             <ListItemIcon>
                 <PeopleIcon />
             </ListItemIcon>
             <ListItemText primary="Customers" />
         </ListItemButton>
-        <ListItemButton>
+        <ListItemButton
+        onClick={() => {
+            setActiveComponent("ORDERS");
+        }}
+        >
             <ListItemIcon>
                 <BarChartIcon />
             </ListItemIcon>
-            <ListItemText primary="Reports" />
+            <ListItemText primary="Orders" />
         </ListItemButton>
-        <ListItemButton>
+        <ListItemButton
+        onClick={() => {
+            setActiveComponent("FILEUPLOAD");
+        }}
+        >
             <ListItemIcon>
-                <LayersIcon />
+                <UploadFileIcon />
             </ListItemIcon>
-            <ListItemText primary="Integrations" />
+            <ListItemText primary="FileUploads" />
         </ListItemButton>
     </React.Fragment>
 );
 
-export const secondaryListItems = (
+export const SecondaryListItems =(setActiveComponent)=> (
     <React.Fragment>
         <ListSubheader component="div" inset>
             Saved reports

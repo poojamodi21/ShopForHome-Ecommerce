@@ -30,7 +30,12 @@ const userSchema = new mongoose.Schema({
             ref:'Product',
         },
         
-    }]
+    }],
+    discount:{
+        type:Number,
+        default:0
+    }
+
 })
 
 mongoose.model("Users",userSchema)

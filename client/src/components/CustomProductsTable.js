@@ -24,15 +24,20 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 
 
-const CustomTable = ({ name, isAdmin, id, customers, discount, setCustomers }) => {
-    const [editUser, setEditUser] = useState(false);
-    const [admin, setAdmin] = useState(isAdmin);
+const CustomProductsTable = ({ name, description, price, category, id, countInStock, image, products, setProducts }) => {
+    // const [editUser, setEditUser] = useState(false);
+    // const [admin, setAdmin] = useState(isAdmin);
+    
     const [newName, setNewName] = useState(name);
-    const [newDiscount, setNewDiscount] = useState(discount);
+    const [newDescription, setNewDescription] = useState(description);
+    const [newPrice, setNewPrice] = useState(price);
+    const [newCategory, setNewCategory] = useState(category);
+    const [newCountInStock, setNewCountInStock] = useState(countInStock);
+    const [newImage, setNewImage] = useState(image);
+    const [editProduct, setEditProduct] = useState(false);
 
-
-    const deleteUser = async () => {
-        const response = await fetch(`/deleteUser/${id}`, {
+    const deleteProduct = async () => {
+        const response = await fetch(`/deleteProduct/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -53,7 +58,7 @@ const CustomTable = ({ name, isAdmin, id, customers, discount, setCustomers }) =
 
         }
         else {
-            toast.success("User deleted successfully", {
+            toast.success(data.message, {
                 position: "top-center",
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -62,13 +67,15 @@ const CustomTable = ({ name, isAdmin, id, customers, discount, setCustomers }) =
                 draggable: true,
                 progress: undefined,
             });
-            setCustomers(data.users);
+            setProducts(data.products);
         }
     }
 
 
-    const saveUser = async (id) => {
-        const response = await fetch(`/updateUser/${id}`, {
+
+    
+    const saveProduct = async (id) => {
+        const response = await fetch(`/updateProduct/${id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -76,8 +83,12 @@ const CustomTable = ({ name, isAdmin, id, customers, discount, setCustomers }) =
             },
             body: JSON.stringify({
                 name: newName,
-                isAdmin: admin,
-                discount: newDiscount
+                description: newDescription,
+                price: newPrice,
+                category: newCategory,
+                countInStock: newCountInStock,
+                image: newImage,
+
             })
         });
         const data = await response.json();
@@ -94,7 +105,7 @@ const CustomTable = ({ name, isAdmin, id, customers, discount, setCustomers }) =
 
         }
         else {
-            toast.success("User updated successfully", {
+            toast.success(data.message, {
                 position: "top-center",
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -103,18 +114,18 @@ const CustomTable = ({ name, isAdmin, id, customers, discount, setCustomers }) =
                 draggable: true,
                 progress: undefined,
             });
-            setCustomers(data.users);
-
+            setProducts(data.products);
         }
     }
 
 
 
+    
     return (
-
+        
         <TableRow key={id}>
             {
-                editUser ?
+                editProduct ?
                     (
                         <>
                             <TableCell>
@@ -124,7 +135,43 @@ const CustomTable = ({ name, isAdmin, id, customers, discount, setCustomers }) =
                                 />
 
                             </TableCell>
-                            <TableCell>{isAdmin ?
+                            <TableCell>
+                                <TextField id="outlined-basic" label="Description" variant="outlined" value={newDescription}
+                                    onChange={(e) =>setNewDescription(e.target.value)}
+
+                                />
+
+                            </TableCell>
+                            {/* <TableCell>
+                                <TextField id="outlined-basic" label="Name" variant="outlined" value={newImage}
+                                    onChange={(e) => setNewImage(e.target.value)}
+
+                                />
+
+                            </TableCell> */}
+                            <TableCell>
+                                <TextField id="outlined-basic" label="Price" variant="outlined" value={newPrice}
+                                    onChange={(e) => setNewPrice(e.target.value)}
+
+                                />
+
+                            </TableCell>
+                            <TableCell>
+                                <TextField id="outlined-basic" label="Category" variant="outlined" value={newCategory}
+                                    onChange={(e) => setNewCategory(e.target.value)}
+
+                                />
+
+                            </TableCell>
+                            <TableCell>
+                                <TextField id="outlined-basic" label="Count in stock" variant="outlined" value={newCountInStock}
+                                    onChange={(e) => setNewCountInStock(e.target.value)}
+
+                                />
+
+                            </TableCell>
+
+                            {/* <TableCell>{isAdmin ?
                                 <Checkbox {...label} defaultChecked
                                     onChange={(e) => {
                                         setAdmin(e.target.checked)
@@ -142,21 +189,13 @@ const CustomTable = ({ name, isAdmin, id, customers, discount, setCustomers }) =
                                 />
                             }
 
-                            </TableCell>
-                            <TableCell>
-                                <TextField id="outlined-basic" label="Name" variant="outlined" value={newDiscount}
-                                    onChange={(e) => setNewDiscount(e.target.value)}
-
-                                />
-
-                            </TableCell>
+                            </TableCell> */}
                             <TableCell>
 
                                 <Button variant="contained" color="warning"
                                     onClick={() => {
-                                        saveUser(id)
-                                        setEditUser(false);
-
+                                        saveProduct(id)
+                                        setEditProduct(false)
                                     }
                                     }
                                 ><UpgradeIcon />
@@ -169,7 +208,7 @@ const CustomTable = ({ name, isAdmin, id, customers, discount, setCustomers }) =
                                 <Button
                                     variant="contained"
                                     color="error"
-                                    onClick={() => deleteUser(id)}
+                                    // onClick={() => deleteUser(id)}
                                     disabled
                                 >
                                     <DeleteIcon />
@@ -181,19 +220,18 @@ const CustomTable = ({ name, isAdmin, id, customers, discount, setCustomers }) =
                     ) : (
                         <>
                             <TableCell>{name}</TableCell>
-                            <TableCell>{isAdmin ?
-                                <CheckIcon style={{ color: 'green' }} />
-                                :
-                                <CloseIcon style={{ color: 'red' }} />
-                            }
+                            <TableCell>{description}</TableCell>
+                            {/* <TableCell>{image}</TableCell> */}
+                            <TableCell>{price}</TableCell>
+                            <TableCell>{category}</TableCell>
+                            <TableCell>{countInStock}</TableCell>
 
-                            </TableCell>
-                            <TableCell>{discount}</TableCell>
+
                             <TableCell>
 
                                 <Button variant="contained"
                                     onClick={() => {
-                                        setEditUser(true);
+                                        setEditProduct(true);
 
                                     }
                                     }
@@ -207,7 +245,7 @@ const CustomTable = ({ name, isAdmin, id, customers, discount, setCustomers }) =
                                 <Button
                                     variant="contained"
                                     color="error"
-                                    onClick={() => deleteUser(id)}
+                                    onClick={() => deleteProduct(id)}
                                 >
                                     <DeleteIcon />
                                 </Button>
@@ -222,4 +260,4 @@ const CustomTable = ({ name, isAdmin, id, customers, discount, setCustomers }) =
     )
 }
 
-export default CustomTable
+export default CustomProductsTable

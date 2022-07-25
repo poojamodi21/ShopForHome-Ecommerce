@@ -49,13 +49,26 @@ const login = async (req, res) => {
         return res.status(422).json({ error: "Invalid name or Password" })
     }
     const token = jwt.sign({ id: savedUser._id }, JWT_KEY)
-    const user = {
-        name: savedUser.name,
-        isAdmin: savedUser.isAdmin,
-        cart: savedUser.cart
-    }
-    res.json({ token: token, user: user })
+    // const user = {
+    //     name: savedUser.name,
+    //     isAdmin: savedUser.isAdmin,
+    //     cart: savedUser.cart
+    // }
+    User.findOne({ name: name })
+        .populate('cart.productId').populate('wishlist.productId')
+        .exec((error, user) => {
+            if (error) {
+                return res.status(422).json({ error: error })
+            }
+            res.json({
+                token,
+                user,
+            })
+        }
+        )
 }
+
+
 const allUsers = async (req, res) => {
     try {
         if (!req.user.isAdmin) return res.status(401).json({ error: "You must be admin" })
@@ -92,6 +105,7 @@ const deleteUser = async (req, res) => {
 
             }
         }
+
         )
     }
     catch (error) {
@@ -114,9 +128,9 @@ const convertAdmin = async (req, res) => {
 
 const updateUser = async (req, res) => {
     const { id } = req.params
-    const { name, isAdmin } = req.body
+    const { name, isAdmin,discount } = req.body
     try {
-        const user = await User.findByIdAndUpdate(id, { name, isAdmin }, { new: true })
+        const user = await User.findByIdAndUpdate(id, { name, isAdmin ,discount}, { new: true })
         User.find({})
             .then(
                 (users) => {
@@ -143,8 +157,7 @@ const addToCart = async (req, res) => {
         if (!userData) return res.status(404).json({ error: "User not found" })
         const product = await Product.findById(id)
         if (!product) return res.status(404).json({ error: "Product not found" })
-        console.log(userData, "this is user data")
-        // if (userData.cart.includes(id)) {
+
         //     return res.status(422).json({ error: "Product already in cart" })
         // }
         if (userData.cart.some(item => item.productId.toString() === id)) {
@@ -155,7 +168,7 @@ const addToCart = async (req, res) => {
             $push: { cart: { productId: id, quantity: 1 } }
         }, {
             new: true
-        }).populate('cart.productId')
+        }).populate('cart.productId').populate('wishlist.productId')
             .exec((error, result) => {
                 if (error) {
                     return res.status(422).json({ error: error })
@@ -181,40 +194,67 @@ const addToWishlist = async (req, res) => {
     const { id } = req.params
     const user = req.user.name
     console.log(user, id)
+
     try {
-        const userData = await User.find({ name: user })
+        const userData = await User.findOne({ name: user })
         if (!userData) return res.status(404).json({ error: "User not found" })
         const product = await Product.findById(id)
         if (!product) return res.status(404).json({ error: "Product not found" })
+
+        //     return res.status(422).json({ error: "Product already in cart" })
+        // }
+        if (userData.wishlist.some(item => item.productId.toString() === id)) {
+            return res.status(422).json({ error: "Product already in cart" })
+        }
+
         const result = await User.findOneAndUpdate({ name: user }, {
-            $push: { wishlist: { productId: id, quantity: 1 } }
+            $push: { wishlist: { productId: id } }
         }, {
             new: true
-        }).populate('wishlist.productId')
-        if (!result) return res.status(404).json({ error: "Something went wrong" })
-        res.json({ message: "Product added to wishlist successfully", result })
+        }).populate('cart.productId').populate('wishlist.productId')
+            .exec((error, result) => {
+                if (error) {
+                    return res.status(422).json({ error: error })
+                }
+                else {
+                    console.log(result, "from wishlist")
+                    res.json({ message: "Product added to wishlist successfully", result })
+                }
+            }
+            )
     }
+
+    // if (!result) return res.status(404).json({ error: "Something went wrong" })
+    // res.json({ message: "Product added to cart successfully" , result})
+
     catch (error) {
         console.log(error)
 
     }
+
 }
+
+// if (!result) return res.status(404).json({ error: "Something went wrong" })
+// res.json({ message: "Product added to wishlist successfully", result })
 
 
 
 const getUser = async (req, res) => {
     const user = req.user.name
     try {
-        const userData = await User.findOne({ name: user }).populate('cart.productId')
+        const userData = await User.findOne({ name: user }).populate('cart.productId').populate('wishlist.productId')
             .exec((error, result) => {
                 if (error) {
                     return res.status(422).json({ error: error })
                 }
                 else {
+                    console.log(result, "from get user")
                     res.json({ message: "User found successfully", result })
+
                 }
             }
             )
+
         // if (!userData) return res.status(404).json({ error: "User not found" })
         // const loggedInUser = {
         //     name: userData.name,
@@ -240,7 +280,7 @@ const removeProduct = async (req, res) => {
                 $pull:
                     { cart: { productId: id } }
             }, { new: true })
-            .populate('cart.productId')
+            .populate('cart.productId').populate('wishlist.productId')
             .exec((error, result) => {
                 if (error) {
                     return res.status(422).json({ error: error })
@@ -258,6 +298,36 @@ const removeProduct = async (req, res) => {
     }
 }
 
+const removeFromWishlist = async (req, res) => {
+    const { id } = req.params
+    const user = req.user.name
+    try {
+        const userData = await User.findOne({ name: user })
+        if (!userData) return res.status(404).json({ error: "User not found" })
+        const result = await User.findByIdAndUpdate(userData._id,
+            {
+                $pull:
+                    { wishlist: { productId: id } }
+            }, { new: true })
+            .populate('cart.productId').populate('wishlist.productId')
+            .exec((error, result) => {
+                if (error) {
+                    return res.status(422).json({ error: error })
+                }
+                else {
+                    res.json({ message: "Product removed from wishlist successfully", result })
+                }
+            }
+            )
+        //     if (!result) return res.status(404).json({ error: "Product not found" })
+        //     res.json({ message: "Product removed from cart successfully", result })
+    }
+    catch (error) {
+        console.log(error)
+    }
+}
+
+
 
 
 
@@ -274,4 +344,5 @@ module.exports = {
     getUser,
     addToWishlist,
     removeProduct,
+    removeFromWishlist
 }

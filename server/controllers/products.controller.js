@@ -3,7 +3,7 @@ const Product = mongoose.model("Product")
 const csv = require('csvtojson')
 
 const addProduct = (req, res) => {
-    const { name, price, description, image, category, urlQuery, countInStock } = req.body
+    const { name, price, description, image, category, countInStock } = req.body
 
     if (!req.user.isAdmin) return res.status(401).json({ error: "You must be admin" })
 
@@ -14,16 +14,29 @@ const addProduct = (req, res) => {
         image,
         countInStock,
         category,
-        urlQuery
+        urlQuery: name
     })
     product.save()
         .then(product => {
-            res.json({ message: "saved successfully" })
-        })
+            Product.find({})
+                .then(
+                    products => {
+                        res.json({ products, message: "Product added successfully" })
+                    }
+                )
+                .catch(error => {
+
+                    res.status(500).json({ error })
+                }
+                )
+        }
+        )
         .catch(error => {
-            console.log(error)
-        })
+            res.status(500).json({ error })
+        }
+        )
 }
+
 
 const allProducts = async (req, res) => {
     try {
@@ -57,10 +70,19 @@ const updateProduct = async (req, res) => {
             if (error) {
                 return res.status(422).json({ error: error })
             } else {
-                res.json({ message: "Marked Completed", result })
+                Product.find({})
+                    .then(
+                        (products) => {
+                            res.json({ message: "Product updated successfully", products })
+                        }
+                    ).catch
+                    (error => {
+                        console.log(error)
+                    }
+                    )
             }
-        })
-
+        }
+        )
     }
     catch (error) {
         console.log(error)
@@ -77,7 +99,16 @@ const deleteProduct = async (req, res) => {
             if (error) {
                 return res.status(422).json({ error: error })
             } else {
-                res.json({ message: "Deleted Successfully", result })
+                Product.find({})
+                    .then(
+                        (products) => {
+                            res.json({ message: " deleted successfully", products })
+                        }
+                    ).catch
+                    (error => {
+                        console.log(error)
+                    }
+                    )
             }
         }
         )
@@ -95,11 +126,11 @@ const uploadProducts = async (req, res) => {
     const name = file.name
     const path = `C:/Users/Pooja/OneDrive/Desktop/PROJECTS/Great_learning_ecommerce/client/uploads/${name}`
     file.mv(`C:/Users/Pooja/OneDrive/Desktop/PROJECTS/Great_learning_ecommerce/client/uploads/${name}`)
-    
+
     console.log("file uploaded")
     console.log(file)
     console.log(name)
-  
+
     csv()
         .fromFile(path)
         .then((jsonObj) => {

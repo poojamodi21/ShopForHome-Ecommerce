@@ -24,7 +24,7 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { useEffect } from 'react';
-
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -189,6 +189,28 @@ export default function PrimarySearchAppBar({ search, setSearch, category, setCa
             <MenuItem>
                 <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                     <Badge
+                        badgeContent={globalContext.user.wishlist.length} color="error">
+                        <Link to="/wishlist" >
+                            <FavoriteIcon />
+                        </Link>
+                    </Badge>
+                </IconButton>
+                <p>Wishlist</p>
+            </MenuItem>
+            <MenuItem>
+                <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+                    <Badge
+                        badgeContent={globalContext.user.wishlist.length} color="error">
+                        <Link to="/wishlist" >
+                            <FavoriteIcon />
+                        </Link>
+                    </Badge>
+                </IconButton>
+                <p>Wishlist</p>
+            </MenuItem>
+            <MenuItem>
+                <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+                    <Badge
                         badgeContent={globalContext.user.cart.length} color="error">
                         <Link to="/cart" >
                             <ShoppingCartIcon />
@@ -334,6 +356,13 @@ export default function PrimarySearchAppBar({ search, setSearch, category, setCa
                         {
                             console.log(globalContext.user.cart)
                         }
+                        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+                            <Badge badgeContent={globalContext.user.wishlist.length} color="error">
+                                <Link to="/wishlist" style={{ color: 'white' }}>
+                                    <FavoriteIcon />
+                                </Link>
+                            </Badge>
+                        </IconButton>
                         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                             <Badge badgeContent={globalContext.user.cart.length} color="error">
                                 <Link to="/cart" style={{ color: 'white' }}>

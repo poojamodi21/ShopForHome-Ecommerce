@@ -3,7 +3,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import {Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -29,7 +29,7 @@ export default function Login() {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (name === "" && password === "") {
-            
+
             toast.error("Please enter your name and password", {
                 position: "top-center",
                 autoClose: 3000,
@@ -98,11 +98,11 @@ export default function Login() {
                             draggable: true,
                             progress: undefined,
                         });
-                        const timer = setTimeout(() => {
+                        navigate("/");
+                        // const timer = setTimeout(() => {
 
-                            navigate("/");
-                        }, 2000);
-                        timer.clearTimeout();
+                        // }, 2000);
+                        // timer.clearTimeout();
 
                     }
                 }).catch(error => {
@@ -156,7 +156,7 @@ export default function Login() {
                                 id="password"
                                 autoComplete="current-password"
                             />
-                            
+
                             <Button
                                 type="submit"
                                 fullWidth
@@ -168,7 +168,7 @@ export default function Login() {
 
                             <Grid container>
                                 <Grid item>
-                                    <Link to="/register" style={{color:'blue',textDecoration:'none'}}>
+                                    <Link to="/register" style={{ color: 'blue', textDecoration: 'none' }}>
                                         {"Don't have an account? Sign Up"}
                                     </Link>
                                 </Grid>

@@ -7,24 +7,21 @@ const orderSchema = new mongoose.Schema(
             ref: 'User',
             required: true
         },
-        products: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Product',
-                required: true
-            }
-        ],
-        address: {
-            type: String,
+        products: [],
+        total: {
+            type: Number,
             required: true
         },
         payment: {
             type: String,
+            default: 'Not paid',
             required: true
         },
         status: {
             type: String,
+            default: 'pending',
             required: true
+
         }
     },
     {
