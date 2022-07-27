@@ -27,7 +27,7 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 const CustomProductsTable = ({ name, description, price, category, id, countInStock, image, products, setProducts }) => {
     // const [editUser, setEditUser] = useState(false);
     // const [admin, setAdmin] = useState(isAdmin);
-    
+
     const [newName, setNewName] = useState(name);
     const [newDescription, setNewDescription] = useState(description);
     const [newPrice, setNewPrice] = useState(price);
@@ -35,6 +35,7 @@ const CustomProductsTable = ({ name, description, price, category, id, countInSt
     const [newCountInStock, setNewCountInStock] = useState(countInStock);
     const [newImage, setNewImage] = useState(image);
     const [editProduct, setEditProduct] = useState(false);
+
 
     const deleteProduct = async () => {
         const response = await fetch(`/deleteProduct/${id}`, {
@@ -73,7 +74,7 @@ const CustomProductsTable = ({ name, description, price, category, id, countInSt
 
 
 
-    
+
     const saveProduct = async (id) => {
         const response = await fetch(`/updateProduct/${id}`, {
             method: "PUT",
@@ -118,11 +119,29 @@ const CustomProductsTable = ({ name, description, price, category, id, countInSt
         }
     }
 
+    // let base64code = ""
+    // const handleChange = e => {
+    //     const files = e.target.files;
+    //     const file = files[0];
+    //     getBase64(file);
+    // };
+
+    // const onLoad = fileString => {
+    //     setNewImage(fileString);
+    //     this.base64code = fileString
+    //   };
+
+    // const getBase64 = file => {
+    //     const reader = new FileReader();
+    //     reader.readAsDataURL(file);
+    //     reader.onload = () => {
+    //         onLoad(reader.result);
+    //     }
+    // }
 
 
-    
     return (
-        
+
         <TableRow key={id}>
             {
                 editProduct ?
@@ -137,18 +156,22 @@ const CustomProductsTable = ({ name, description, price, category, id, countInSt
                             </TableCell>
                             <TableCell>
                                 <TextField id="outlined-basic" label="Description" variant="outlined" value={newDescription}
-                                    onChange={(e) =>setNewDescription(e.target.value)}
+                                    onChange={(e) => setNewDescription(e.target.value)}
 
                                 />
 
                             </TableCell>
-                            {/* <TableCell>
-                                <TextField id="outlined-basic" label="Name" variant="outlined" value={newImage}
-                                    onChange={(e) => setNewImage(e.target.value)}
+
+                            <TableCell>
+                                <TextField id="outlined-basic" label="Name" variant="outlined" value ={newImage}
+                                    onChange={(e)=>setNewImage(e.target.value)}
+                                    type="text"
+
+
 
                                 />
 
-                            </TableCell> */}
+                            </TableCell>
                             <TableCell>
                                 <TextField id="outlined-basic" label="Price" variant="outlined" value={newPrice}
                                     onChange={(e) => setNewPrice(e.target.value)}
@@ -221,7 +244,7 @@ const CustomProductsTable = ({ name, description, price, category, id, countInSt
                         <>
                             <TableCell>{name}</TableCell>
                             <TableCell>{description}</TableCell>
-                            {/* <TableCell>{image}</TableCell> */}
+                            <TableCell>{image}</TableCell>
                             <TableCell>{price}</TableCell>
                             <TableCell>{category}</TableCell>
                             <TableCell>{countInStock}</TableCell>

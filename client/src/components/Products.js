@@ -35,7 +35,7 @@ export default function Products() {
     const [newImage, setNewImage] = useState('');
 
 
-    
+
     const fetchProducts = async () => {
         const response = await fetch('/allProducts',
             {
@@ -123,7 +123,7 @@ export default function Products() {
                         {/* <TableCell>Date</TableCell> */}
                         <TableCell style={{ fontWeight: 'bold' }}>Name</TableCell>
                         <TableCell style={{ fontWeight: 'bold' }}>description</TableCell>
-                        {/* <TableCell style={{ fontWeight: 'bold' }}>image</TableCell> */}
+                        <TableCell style={{ fontWeight: 'bold' }}>image</TableCell>
                         <TableCell style={{ fontWeight: 'bold' }}>price</TableCell>
                         <TableCell style={{ fontWeight: 'bold' }}>category</TableCell>
                         <TableCell style={{ fontWeight: 'bold' }}>countInStock</TableCell>
@@ -149,13 +149,14 @@ export default function Products() {
                             />
 
                         </TableCell>
-                        {/* <TableCell>
-                                <TextField id="outlined-basic" label="Name" variant="outlined" value={newImage}
-                                    onChange={(e) => setNewImage(e.target.value)}
+                        <TableCell>
+                                <TextField id="outlined-basic" label="Name" variant="outlined" 
+                                value ={newImage}
+                                onChange={(e)=>setNewImage(e.target.value)}
 
                                 />
 
-                            </TableCell> */}
+                            </TableCell>
                         <TableCell>
                             <TextField id="outlined-basic" label="Price" variant="outlined" value={newPrice}
                                 onChange={(e) => setNewPrice(e.target.value)}

@@ -88,6 +88,7 @@ export default function Cart() {
                         price={item.productId.price}
                         category={item.productId.category}
                         id={item.productId._id}
+                        countInStock = {item.productId.countInStock}
                         index={index}
                         total={total}
                         setTotal={setTotal}

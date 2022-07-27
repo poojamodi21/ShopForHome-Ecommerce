@@ -16,7 +16,7 @@ import { ToastContainer, toast } from 'material-react-toastify';
 import 'material-react-toastify/dist/ReactToastify.css';
 
 
-const CardCart = ({ name, description, price, category, id, index, total, setTotal }) => {
+const CardCart = ({ name, description, price, category, id, index, total, setTotal ,countInStock}) => {
     const [quantity, setQuantity] = useState(1);
     const globalContext = useContext(GlobalContext);
 
@@ -33,7 +33,8 @@ const CardCart = ({ name, description, price, category, id, index, total, setTot
     useEffect(() => {
         setTotal(getTotal());
         console.log(total)
-    }, [quantity,globalContext.user.cart]);
+        console.log(globalContext.user)
+    }, [quantity, globalContext.user.cart]);
 
     const removeProduct = (id) => {
         fetch(`/removeProduct/${id}`, {
@@ -148,10 +149,26 @@ const CardCart = ({ name, description, price, category, id, index, total, setTot
                                         cursor: 'pointer',
                                     }}
                                     onClick={() => {
-                                        setQuantity(quantity + 1)
-                                        let temp = globalContext.user;
-                                        temp.cart[index].quantity = quantity + 1;
-                                        globalContext.setUser(temp);
+                                        if (quantity == countInStock) {
+                                            toast.error("Maximum product quantity reached", {
+                                                position: "top-center",
+                                                autoClose: 3000,
+                                                hideProgressBar: true,
+                                                closeOnClick: true,
+                                                pauseOnHover: true,
+                                                draggable: true,
+                                                progress: undefined,
+                                            });
+                                        
+                                        }
+                                        
+                                        else {
+                                            console.log(quantity)
+                                            setQuantity(quantity + 1)
+                                            let temp = globalContext.user;
+                                            temp.cart[index].quantity = quantity + 1;
+                                            globalContext.setUser(temp);
+                                        }
                                     }
                                     }
 
