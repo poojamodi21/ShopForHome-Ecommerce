@@ -41,6 +41,7 @@ export default function Cart() {
         }).then(res => res.json())
             .then(data => {
                 console.log(data);
+                
                 toast.success(data.message, {
                     position: "top-center",
                     autoClose: 3000,
@@ -86,6 +87,7 @@ export default function Cart() {
                     < CardCart name={item.productId.name}
                         description={item.productId.description}
                         price={item.productId.price}
+                        image = {item.productId.image}
                         category={item.productId.category}
                         id={item.productId._id}
                         countInStock = {item.productId.countInStock}

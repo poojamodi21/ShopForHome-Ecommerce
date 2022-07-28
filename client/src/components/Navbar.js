@@ -186,7 +186,7 @@ export default function PrimarySearchAppBar({ search, setSearch, category, setCa
             onClose={handleMobileMenuClose}
         >
 
-            <MenuItem>
+            {/* <MenuItem>
                 <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                     <Badge
                         badgeContent={globalContext.user.wishlist.length} color="error">
@@ -195,8 +195,8 @@ export default function PrimarySearchAppBar({ search, setSearch, category, setCa
                         </Link>
                     </Badge>
                 </IconButton>
-                <p>Wishlist</p>
-            </MenuItem>
+                <p>ishlist</p>
+            </MenuItem> */}
             <MenuItem>
                 <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                     <Badge

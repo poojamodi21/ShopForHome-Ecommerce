@@ -9,8 +9,8 @@ const productSchema = new mongoose.Schema(
         },
         urlQuery: {
             type: String,
-            required: true,
-            unique: true
+            
+            
         },
         image: {
             type: String,

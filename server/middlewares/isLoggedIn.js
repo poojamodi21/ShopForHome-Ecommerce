@@ -17,7 +17,7 @@ const isLoggedIn = (req, res, next) => {
 
         User.findById(id).then(userdata => {
             req.user = userdata
-            console.log("from middleware", req.user)
+            
             next()
         })
     })

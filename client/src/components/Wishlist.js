@@ -21,7 +21,7 @@ const Wishlist = () => {
       <Typography gutterBottom variant="h4" component="div" style={{ marginBottom: '30px' }} >
         Right to the latest trends
       </Typography>
-      <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+      <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 1, sm: 8, md: 12 }}>
         {
           globalContext.user.wishlist.map((product, index) => (
             <Grid item xs={1} sm={4} md={3} key={index}>

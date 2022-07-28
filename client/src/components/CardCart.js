@@ -16,7 +16,7 @@ import { ToastContainer, toast } from 'material-react-toastify';
 import 'material-react-toastify/dist/ReactToastify.css';
 
 
-const CardCart = ({ name, description, price, category, id, index, total, setTotal ,countInStock}) => {
+const CardCart = ({ name, description, price, category, id, index, total, setTotal ,countInStock,image}) => {
     const [quantity, setQuantity] = useState(1);
     const globalContext = useContext(GlobalContext);
 
@@ -92,7 +92,7 @@ const CardCart = ({ name, description, price, category, id, index, total, setTot
                         <CardMedia
                             component="img"
                             sx={{ width: 120, height: 90 }}
-                            image="https://source.unsplash.com/random/400x200"
+                            image={image}
                             alt="Live from space album cover"
                         />
                     </Grid>

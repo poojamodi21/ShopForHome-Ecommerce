@@ -18,6 +18,7 @@ import 'material-react-toastify/dist/ReactToastify.css';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
 import UpgradeIcon from '@mui/icons-material/Upgrade';
+import axios from 'axios';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
@@ -35,6 +36,7 @@ const CustomProductsTable = ({ name, description, price, category, id, countInSt
     const [newCountInStock, setNewCountInStock] = useState(countInStock);
     const [newImage, setNewImage] = useState(image);
     const [editProduct, setEditProduct] = useState(false);
+    const [editImage, setEditImage] = useState(false);
 
 
     const deleteProduct = async () => {
@@ -75,7 +77,7 @@ const CustomProductsTable = ({ name, description, price, category, id, countInSt
 
 
 
-    const saveProduct = async (id) => {
+    const saveProduct = async (path, id) => {
         const response = await fetch(`/updateProduct/${id}`, {
             method: "PUT",
             headers: {
@@ -88,7 +90,7 @@ const CustomProductsTable = ({ name, description, price, category, id, countInSt
                 price: newPrice,
                 category: newCategory,
                 countInStock: newCountInStock,
-                image: newImage,
+                image: path,
 
             })
         });
@@ -117,6 +119,33 @@ const CustomProductsTable = ({ name, description, price, category, id, countInSt
             });
             setProducts(data.products);
         }
+    }
+
+    const addImage = async (id) => {
+        if(editImage) {
+        const formData = new FormData();
+        formData.append('image', newImage, newImage.name);
+        // setNewImageName(`/images/${newImage.name}`);
+        axios.post('/addImage', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${localStorage.getItem("jwt")}`
+            }
+        })
+            .then(res => {
+
+                // setNewImageName(res.image)
+                console.log(res, "this is the response")
+                saveProduct(`/images/${newImage.name}`, id);
+            }
+            )
+            .catch(err => {
+                console.log(err);
+            }
+            )}
+            else{
+                saveProduct(image, id);
+            }
     }
 
     // let base64code = ""
@@ -163,9 +192,14 @@ const CustomProductsTable = ({ name, description, price, category, id, countInSt
                             </TableCell>
 
                             <TableCell>
-                                <TextField id="outlined-basic" label="Name" variant="outlined" value ={newImage}
-                                    onChange={(e)=>setNewImage(e.target.value)}
-                                    type="text"
+                                <TextField id="outlined-basic" variant="outlined"
+                                    onChange={(e) => {
+                                        setNewImage(e.target.files[0])
+                                        setEditImage(true)
+                                    }
+                                    }
+
+                                    type="file"
 
 
 
@@ -217,7 +251,7 @@ const CustomProductsTable = ({ name, description, price, category, id, countInSt
 
                                 <Button variant="contained" color="warning"
                                     onClick={() => {
-                                        saveProduct(id)
+                                        addImage(id)
                                         setEditProduct(false)
                                     }
                                     }

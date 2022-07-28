@@ -20,6 +20,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import { ToastContainer, toast } from 'material-react-toastify';
 import 'material-react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
+
 
 
 
@@ -32,8 +34,8 @@ export default function Products() {
     const [newPrice, setNewPrice] = useState('');
     const [newCategory, setNewCategory] = useState('');
     const [newCountInStock, setNewCountInStock] = useState('');
-    const [newImage, setNewImage] = useState('');
-
+    const [newImage, setNewImage] = useState(null);
+    const [newImageName, setNewImageName] = useState('');
 
 
     const fetchProducts = async () => {
@@ -48,10 +50,9 @@ export default function Products() {
         const data = await response.json();
         setProducts(data);
     }
-
-    const addNewProduct = async () => {
-        const response = await fetch('/addProduct',
-            {
+    const addProduct = async (temp) => {
+        try {
+            const res = await fetch('/addProduct', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -63,44 +64,201 @@ export default function Products() {
                     price: newPrice,
                     category: newCategory,
                     countInStock: newCountInStock,
-                    image: "https://source.unsplash.com/random/400x200"
-
+                    image: temp
                 })
-
+            });
+            const data = await res.json();
+            if (data.error) {
+                toast.error(data.error);
             }
-        );
-        const data = await response.json();
-        if (data.error) {
-            toast.error(data.error, {
-                position: "top-center",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-
+            else {
+                toast.success(data.message);
+                fetchProducts();
+                setNewName('');
+                setNewDescription('');
+                setNewPrice('');
+                setNewCategory('');
+                setNewCountInStock('');
+                setNewImage(null);
+            }
         }
-        else {
-            toast.success(data.message, {
-                position: "top-center",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-            setNewName('');
-            setNewDescription('');
-            setNewPrice('');
-            setNewCategory('');
-            setNewCountInStock('');
-            setNewImage('');
-            setProducts(data.products);
+        catch (err) {
+            console.log(err);
         }
     }
+
+
+    const addImage = async () => {
+
+        const formData = new FormData();
+        formData.append('image', newImage, newImage.name);
+        setNewImageName(`/images/${newImage.name}`);
+        axios.post('/addImage', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${localStorage.getItem("jwt")}`
+            }
+        })
+            .then(res => {
+
+                // setNewImageName(res.image)
+                console.log(res, "this is the response")
+                addProduct(`/images/${newImage.name}`);
+            }
+            )
+            .catch(err => {
+                console.log(err);
+            }
+            )
+    }
+
+
+
+    // try {
+    //     const res = await axios.post('/addImage', formData, {
+    //         headers: {
+    //             'Authorization': `Bearer ${localStorage.getItem("jwt")}`,
+    //             'Content-Type': 'multipart/form-data'
+    //         }
+    //     });
+    //     const data = await res.json();
+    //     console.log("addproduct triggered from add image")
+    //     console.log(data)
+    //     setNewImage(data.image);
+    //     addProduct()
+    // } catch (err) {
+    //     console.log(err)
+    // }
+
+
+
+    // const addNewProduct = async () => {
+    //     const fd = new FormData();
+    //     newImage.newName = newName;
+    //     newImage.newDescription = newDescription;
+    //     newImage.newPrice = newPrice;
+    //     newImage.newCategory = newCategory;
+    //     newImage.newCountInStock = newCountInStock;
+    //     console.log(newImage);
+    //     fd.append('image', newImage, newImage.name);
+    //     axios.post('/addProduct', fd, {
+    //         headers: {
+    //             'Content-Type': 'multipart/form-data',
+    //             'Authorization': `Bearer ${localStorage.getItem("jwt")}`
+    //         },
+
+    //     }).then(res => {
+    //         if (res.error) {
+    //             toast.error(res.error,
+    //                 {
+    //                     position: "top-right",
+    //                     autoClose: 5000,
+    //                     hideProgressBar: false,
+    //                     closeOnClick: true,
+    //                     pauseOnHover: true,
+    //                     draggable: true,
+    //                     progress: undefined,
+    //                     className: "toast"
+
+    //                 }
+    //             )
+    //         }
+    //         else {
+    //             toast.success("Product added successfully",
+    //                 {
+    //                     position: "top-right",
+    //                     autoClose: 5000,
+    //                     hideProgressBar: false,
+    //                     closeOnClick: true,
+    //                     pauseOnHover: true,
+    //                     draggable: true,
+    //                     progress: undefined,
+    //                     className: "toast"
+
+    //                 }
+
+    //             )
+    //             setNewName('');
+    //             setNewDescription('');
+    //             setNewPrice('');
+    //             setNewCategory('');
+    //             setNewCountInStock('');
+    //             setNewImage(null);
+    //             setProducts(res.products);
+    //         }
+    //     }
+    //     ).catch(err => {
+    //         toast.error(err,
+    //             {
+    //                 position: "top-right",
+    //                 autoClose: 5000,
+    //                 hideProgressBar: false,
+    //                 closeOnClick: true,
+    //                 pauseOnHover: true,
+    //                 draggable: true,
+    //                 progress: undefined,
+    //                 className: "toast"
+    //             }
+    //         )
+    //     }
+    //     )
+    // }
+
+
+
+
+
+    // const response = await fetch('/addProduct',
+    //     {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             'Authorization': `Bearer ${localStorage.getItem("jwt")}`
+    //         },
+    //         body: JSON.stringify({
+    //             name: newName,
+    //             description: newDescription,
+    //             price: newPrice,
+    //             category: newCategory,
+    //             countInStock: newCountInStock,
+    //             image: "https://source.unsplash.com/random/400x200"
+
+    //         })
+
+    //     }
+    // );
+    // const data = await response.json();
+    // if (data.error) {
+    //     toast.error(data.error, {
+    //         position: "top-center",
+    //         autoClose: 3000,
+    //         hideProgressBar: false,
+    //         closeOnClick: true,
+    //         pauseOnHover: true,
+    //         draggable: true,
+    //         progress: undefined,
+    //     });
+
+    // }
+    // else {
+    //     toast.success(data.message, {
+    //         position: "top-center",
+    //         autoClose: 3000,
+    //         hideProgressBar: false,
+    //         closeOnClick: true,
+    //         pauseOnHover: true,
+    //         draggable: true,
+    //         progress: undefined,
+    //     });
+    //     setNewName('');
+    //     setNewDescription('');
+    //     setNewPrice('');
+    //     setNewCategory('');
+    //     setNewCountInStock('');
+    //     setNewImage('');
+    //     setProducts(data.products);
+    // }
+    // }=
 
 
 
@@ -134,6 +292,7 @@ export default function Products() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
+
                     <TableRow>
                         <TableCell>
                             <TextField id="outlined-basic" label="Name" variant="outlined" value={newName}
@@ -150,13 +309,14 @@ export default function Products() {
 
                         </TableCell>
                         <TableCell>
-                                <TextField id="outlined-basic" label="Name" variant="outlined" 
-                                value ={newImage}
-                                onChange={(e)=>setNewImage(e.target.value)}
+                            <TextField id="outlined-basic" variant="outlined"
 
-                                />
+                                type="file"
+                                onChange={(e) => setNewImage(e.target.files[0])}
 
-                            </TableCell>
+                            />
+
+                        </TableCell>
                         <TableCell>
                             <TextField id="outlined-basic" label="Price" variant="outlined" value={newPrice}
                                 onChange={(e) => setNewPrice(e.target.value)}
@@ -202,7 +362,7 @@ export default function Products() {
 
                             <Button variant="contained" color="success"
                                 onClick={() => {
-                                    addNewProduct();
+                                    addImage();
                                 }
                                 }
 

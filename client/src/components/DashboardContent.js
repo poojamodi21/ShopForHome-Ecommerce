@@ -25,7 +25,10 @@ import { useState } from 'react';
 import Products from './Products';
 import FileUpload from './FileUpload';
 import Orders from './Orders';
-
+import MenuItem from '@mui/material/MenuItem';
+import Menu from '@mui/material/Menu';
+import { useContext } from 'react';
+import { GlobalContext } from '../App';
 
 
 const drawerWidth = 240;
@@ -79,9 +82,51 @@ const mdTheme = createTheme();
 function DashboardContent() {
   const [open, setOpen] = React.useState(true);
   const [activeComponent, setActiveComponent] = useState('PRODUCTS');
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const isMenuOpen = Boolean(anchorEl);
+  const globalContext = useContext(GlobalContext);
   const toggleDrawer = () => {
     setOpen(!open);
   };
+  const menuId = 'primary-search-account-menu';
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+
+  };
+  const handleProfileMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const renderMenu = (
+    <Menu
+      anchorEl={anchorEl}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      id={menuId}
+      keepMounted
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}
+    >
+      <div>
+        {
+          globalContext.lowProducts.map((product) => {
+            return <MenuItem onClick={handleMenuClose} >{product.name} is less than 10</MenuItem>
+
+          }
+          )
+
+        }
+
+      </div>
+
+    </Menu>
+  );
 
   return (
     <ThemeProvider theme={mdTheme}>
@@ -114,8 +159,8 @@ function DashboardContent() {
             >
               Dashboard
             </Typography>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
+            <IconButton color="inherit" onClick={handleProfileMenuOpen}>
+              <Badge badgeContent={globalContext.lowProducts.length} color="secondary">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
@@ -141,10 +186,10 @@ function DashboardContent() {
               setActiveComponent={setActiveComponent}
             />
             <Divider sx={{ my: 1 }} />
-            <SecondaryListItems
+            {/* <SecondaryListItems
               activeComponent={activeComponent}
               setActiveComponent={setActiveComponent}
-            />
+            /> */}
           </List>
         </Drawer>
         <Box
@@ -193,8 +238,8 @@ function DashboardContent() {
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                   {activeComponent === 'PRODUCTS' && <Products />}
                   {activeComponent === 'CUSTOMERS' && <Customers />}
-                  {activeComponent ==='FILEUPLOAD' && <FileUpload/>}
-                  {activeComponent ==='ORDERS' && <Orders/>}
+                  {activeComponent === 'FILEUPLOAD' && <FileUpload />}
+                  {activeComponent === 'ORDERS' && <Orders />}
                 </Paper>
               </Grid>
             </Grid>
@@ -202,6 +247,7 @@ function DashboardContent() {
           </Container>
         </Box>
       </Box>
+      {renderMenu}
     </ThemeProvider>
   );
 }

@@ -11,7 +11,7 @@ const createOrder = async (req, res) => {
 
         Product.findOneAndUpdate(
             {
-                urlQuery: product.productId.urlQuery,
+                name: product.productId.name,
             },
             {
                 $inc: {

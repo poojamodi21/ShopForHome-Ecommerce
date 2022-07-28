@@ -1,4 +1,4 @@
-import { createContext, useEffect,useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import {
   BrowserRouter,
   Route,
@@ -23,12 +23,13 @@ function App() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
+  const [lowProducts, setLowProducts] = useState([]);
   const [user, setUser] = useState({
-    name:"",
+    name: "",
     isAdmin: false,
-    cart : [],
-    wishlist : [],
-  
+    cart: [],
+    wishlist: [],
+
   });
 
   const getUser = async () => {
@@ -42,6 +43,7 @@ function App() {
     });
     const data = await response.json();
     setUser(data.result);
+    setLowProducts(data.lowProducts)
     console.log(data);
   }
   useEffect(() => {
@@ -58,7 +60,9 @@ function App() {
 
   const context = {
     user,
-    setUser
+    setUser,
+    lowProducts,
+    setLowProducts,
   };
 
   return (

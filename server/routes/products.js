@@ -6,6 +6,7 @@ const {
     updateProduct,
     deleteProduct,
     uploadProducts,
+    addImage,
   
 } = require('../controllers/products.controller')
 const  isLoggedIn = require('../middlewares/isLoggedIn')
@@ -15,6 +16,7 @@ router.get('/allProducts',allProducts)
 router.put('/updateProduct/:id',isLoggedIn, updateProduct)
 router.delete('/deleteProduct/:id',isLoggedIn, deleteProduct)
 router.post('/uploadProducts',isLoggedIn, uploadProducts)
+router.post('/addImage',isLoggedIn, addImage)
 
 
 

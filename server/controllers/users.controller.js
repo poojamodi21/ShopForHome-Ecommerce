@@ -150,7 +150,7 @@ const updateUser = async (req, res) => {
 const addToCart = async (req, res) => {
     const { id } = req.params
     const user = req.user.name
-    console.log(user, id)
+    
 
     try {
         const userData = await User.findOne({ name: user })
@@ -193,7 +193,7 @@ const addToCart = async (req, res) => {
 const addToWishlist = async (req, res) => {
     const { id } = req.params
     const user = req.user.name
-    console.log(user, id)
+    
 
     try {
         const userData = await User.findOne({ name: user })
@@ -217,7 +217,7 @@ const addToWishlist = async (req, res) => {
                     return res.status(422).json({ error: error })
                 }
                 else {
-                    console.log(result, "from wishlist")
+                   
                     res.json({ message: "Product added to wishlist successfully", result })
                 }
             }
@@ -248,9 +248,15 @@ const getUser = async (req, res) => {
                     return res.status(422).json({ error: error })
                 }
                 else {
-                    console.log(result, "from get user")
+                   if(result.isAdmin){
+                    Product.find({countInStock:{$lt:10}}).then(products=>{
+                        res.json({ message: "User found successfully", result, lowProducts:products}) })
+
+                     }else{
+
                     res.json({ message: "User found successfully", result })
 
+                     } 
                 }
             }
             )
